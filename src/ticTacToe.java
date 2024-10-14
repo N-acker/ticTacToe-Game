@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.Random;
 import java.util.Scanner;
 
 public class ticTacToe {
@@ -12,13 +13,24 @@ public class ticTacToe {
 
         printGameBoard(gameBoard);
 
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Enter a space on the game board (1-9):");
-        int pos = scan.nextInt(); //this takes in the input of the user
 
-        System.out.println(pos);
 
-        printGameBoard(gameBoard);
+
+
+            Scanner scan = new Scanner(System.in);
+            System.out.println("Enter a space on the game board (1-9):");
+            int playerPosition = scan.nextInt(); //this takes in the input of the user
+
+
+            placePiece(gameBoard, playerPosition, "player");
+
+            Random rand = new Random();
+            int cpuPos = rand.nextInt(9) + 1;
+            placePiece(gameBoard, cpuPos, "cpu");
+
+            printGameBoard(gameBoard);
+
+
     }
 
     public static void printGameBoard(char[][] gameBoard) {
