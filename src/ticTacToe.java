@@ -16,40 +16,93 @@ public class ticTacToe {
         printGameBoard(gameBoard);
 
         while(true){
-
+            System.out.println("Enter 1 for single player or 2 for multiplayer");
             Scanner scan = new Scanner(System.in);
-            System.out.println("Enter a space on the game board (1-9):");
-            int playerPos = scan.nextInt(); //this takes in the input of the user
-            while(playerPositions.contains(playerPos) || cpuPositions.contains(playerPos)){
-                System.out.println("Position taken! Enter a different position!");
-                playerPos = scan.nextInt();
-            }
+            int choice = scan.nextInt();
+            if (choice == 1){
+                while(true){
 
-            placePiece(gameBoard, playerPos, "player");
+                    System.out.println("Enter a space on the game board (1-9):");
+                    int playerPos = scan.nextInt(); //this takes in the input of the user
+                    while(playerPositions.contains(playerPos) || cpuPositions.contains(playerPos)){
+                        System.out.println("Position taken! Enter a different position!");
+                        playerPos = scan.nextInt();
+                    }
 
-            String result = checkWinner();
-            if(result.length() > 0){
-                System.out.println(result);
+                    placePiece(gameBoard, playerPos, "player");
+
+                    String result = checkWinner(choice);
+                    if(result.length() > 0){
+                        System.out.println(result);
+                        break;
+                    }
+
+                    Random rand = new Random();
+                    int cpuPos = rand.nextInt(9) + 1;
+                    while(playerPositions.contains(cpuPos) || cpuPositions.contains(cpuPos)){
+                        cpuPos = rand.nextInt(9) + 1;
+                    }
+                    placePiece(gameBoard, cpuPos, "cpu");
+
+                    printGameBoard(gameBoard);
+
+                    result = checkWinner(choice);
+                    if(result.length() > 0){
+                        System.out.println(result);
+                        break;
+                    }
+                    System.out.println(result);
+                }
                 break;
-            }
 
-            Random rand = new Random();
-            int cpuPos = rand.nextInt(9) + 1;
-            while(playerPositions.contains(cpuPos) || cpuPositions.contains(cpuPos)){
-                cpuPos = rand.nextInt(9) + 1;
-            }
-            placePiece(gameBoard, cpuPos, "cpu");
+            } else if(choice == 2){
 
-            printGameBoard(gameBoard);
+                while(true){
 
-            result = checkWinner();
-            if(result.length() > 0){
-                printGameBoard(gameBoard);
-                System.out.println(result);
+                    System.out.println("Player X: Enter a space on the game board (1-9):");
+                    int playerPos = scan.nextInt(); //this takes in the input of the user
+                    while(playerPositions.contains(playerPos) || cpuPositions.contains(playerPos)){
+                        System.out.println("Position taken! Enter a different position!");
+                        playerPos = scan.nextInt();
+                    }
+
+                    placePiece(gameBoard, playerPos, "player");
+
+                    printGameBoard(gameBoard);
+
+                    String result = checkWinner(choice);
+                    if(result.length() > 0){
+                        System.out.println(result);
+                        break;
+                    }
+
+                    System.out.println("Player O: Enter a space on the game board (1-9):");
+                    int player2Pos = scan.nextInt();
+                    while(playerPositions.contains(player2Pos) || cpuPositions.contains(player2Pos)){
+                        System.out.println("Position taken! Enter a different position!");
+                        player2Pos = scan.nextInt();
+                    }
+                    placePiece(gameBoard, player2Pos, "cpu");
+
+                    printGameBoard(gameBoard);
+
+                    result = checkWinner(choice);
+                    if(result.length() > 0){
+                        System.out.println(result);
+                        break;
+                    }
+                    System.out.println(result);
+                }
                 break;
+
+            }else{
+                System.out.println("Only enter 1 or 2!");
             }
-            System.out.println(result);
         }
+
+
+
+
 
     }
 
@@ -106,7 +159,7 @@ public class ticTacToe {
         }
     }
 
-    public static String checkWinner() {
+    public static String checkWinner(int choice) {
 
         List topRow = Arrays.asList(1, 2, 3);
         List midRow = Arrays.asList(4, 5, 6);
@@ -129,12 +182,27 @@ public class ticTacToe {
 
         for(List l : winning){
             if(playerPositions.containsAll(l)){
-                return "Yay you win!";
+                if(choice==1){
+                    System.out.println(" ");
+                    return "Yay you win!";
+                }else{
+                    System.out.println(" ");
+                    return "X wins!";
+                }
             }else if(cpuPositions.containsAll(l)){
-                return "Sorry CPU wins!";
-            }else if(playerPositions.size() + cpuPositions.size() == 9){
-                 return "It's a tie!";
+                if(choice==1){
+                    System.out.println(" ");
+                    return "Sorry CPU wins!";
+                }else{
+                    System.out.println(" ");
+                    return "0 wins!";
+                }
             }
+        }
+
+        if(playerPositions.size() + cpuPositions.size() == 9){
+            System.out.println(" ");
+            return "It's a tie!";
         }
 
         return "";
