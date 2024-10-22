@@ -33,21 +33,26 @@ public class ticTacToe {
 
                     String result = checkWinner(choice);
                     if(result.length() > 0){
+                        System.out.println(" ");
+                        printGameBoard(gameBoard);
                         System.out.println(result);
                         break;
                     }
 
-                    Random rand = new Random();
-                    int cpuPos = rand.nextInt(9) + 1;
-                    while(playerPositions.contains(cpuPos) || cpuPositions.contains(cpuPos)){
-                        cpuPos = rand.nextInt(9) + 1;
-                    }
+//                    Random rand = new Random();
+//                    int cpuPos = rand.nextInt(9) + 1;
+                    int cpuPos = getBestMove(gameBoard);
+//                    while(playerPositions.contains(cpuPos) || cpuPositions.contains(cpuPos)){
+//                        cpuPos = rand.nextInt(9) + 1;
+//                    }
                     placePiece(gameBoard, cpuPos, "cpu");
 
                     printGameBoard(gameBoard);
 
                     result = checkWinner(choice);
                     if(result.length() > 0){
+                        System.out.println(" ");
+                        printGameBoard(gameBoard);
                         System.out.println(result);
                         break;
                     }
@@ -72,6 +77,8 @@ public class ticTacToe {
 
                     String result = checkWinner(choice);
                     if(result.length() > 0){
+                        System.out.println(" ");
+                        printGameBoard(gameBoard);
                         System.out.println(result);
                         break;
                     }
@@ -88,6 +95,8 @@ public class ticTacToe {
 
                     result = checkWinner(choice);
                     if(result.length() > 0){
+                        System.out.println(" ");
+                        printGameBoard(gameBoard);
                         System.out.println(result);
                         break;
                     }
@@ -183,18 +192,14 @@ public class ticTacToe {
         for(List l : winning){
             if(playerPositions.containsAll(l)){
                 if(choice==1){
-                    System.out.println(" ");
                     return "Yay you win!";
                 }else{
-                    System.out.println(" ");
                     return "X wins!";
                 }
             }else if(cpuPositions.containsAll(l)){
                 if(choice==1){
-                    System.out.println(" ");
                     return "Sorry CPU wins!";
                 }else{
-                    System.out.println(" ");
                     return "0 wins!";
                 }
             }
@@ -207,5 +212,68 @@ public class ticTacToe {
 
         return "";
 
+    }
+
+    public static int getBestMove(char[][] gameBoard) {
+        int bestScore = Integer.MIN_VALUE;
+        int bestMove = 0;
+
+        for (int i = 1; i <= 9; i++) {
+//            is the spot still available?
+            if (!playerPositions.contains(i) && !cpuPositions.contains(i)) {
+                cpuPositions.add(i);
+                int score = minimax(0,false);
+                cpuPositions.remove(Integer.valueOf(i));
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMove = i;
+                }
+            }
+        }
+        return bestMove;
+    }
+
+
+
+    public static int minimax(int depth, boolean isMaximizing) {
+        String result = checkWinner(1);
+        if (result.equals("Sorry CPU wins!")) {
+            return 1;
+        } else if (result.equals("Yay you win!")) {
+            return -1;
+        } else if (result.equals("It's a tie!")) {
+            return 0;
+        }
+
+//        if it's a maximizing player check all the best spots by calling minimax recursively then return the best spot
+        int bestScore;
+        if (isMaximizing) {
+            bestScore = Integer.MIN_VALUE;
+            for (int i = 1; i <= 9; i++) {
+//                is the spot available?
+                if (!playerPositions.contains(i) && !cpuPositions.contains(i)) {
+                    cpuPositions.add(i);
+                    int score = minimax(depth+1, false);
+                    cpuPositions.remove(Integer.valueOf(i));
+                    bestScore = Math.max(score, bestScore);
+                }
+            }
+        } else {
+            bestScore = Integer.MAX_VALUE;
+            for (int i = 1; i <= 9; i++) {
+                if (!playerPositions.contains(i) && !cpuPositions.contains(i)) {
+                    playerPositions.add(i);
+                    int score = minimax( depth+1, true);
+                    playerPositions.remove(Integer.valueOf(i));
+                    bestScore = Math.min(score, bestScore);
+                }
+            }
+        }
+        return bestScore;
+
+/*  if you return just 1 the algorithm doesn't pick the most optimal move, it just picks the
+next available spot on the board so let's say spots 1 and 2 get filled, it chooses 3 */
+//        return 1;
     }
 }
