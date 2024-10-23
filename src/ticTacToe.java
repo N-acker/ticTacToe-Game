@@ -206,7 +206,7 @@ public class ticTacToe {
         }
 
         if(playerPositions.size() + cpuPositions.size() == 9){
-            System.out.println(" ");
+//            System.out.println(" ");
             return "It's a tie!";
         }
 
